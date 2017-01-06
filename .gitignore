@@ -1,0 +1,6 @@
+*.sln
+SunForge/SunForge.csproj
+*.csproj
+*.meta
+*.sln
+SunForge/SunForge.sln
