@@ -59,7 +59,7 @@
 				float3x3 rotationMatrix_z = float3x3(c, -s, 0, s, c, 0, 0, 0, 1);
 
 				o.vertex = mul((float4x4) unity_ObjectToWorld, v.vertex);
-				o.position_in_world_space = float3(o.vertex.x, o.vertex.y, o.vertex.z);
+				o.position_in_world_space = float3(o.vertex.x, o.vertex.y, o.vertex.z) - _StarCenter.xyz;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 
 				o.position_in_world_space = mul(o.position_in_world_space, rotationMatrix_x);
@@ -115,7 +115,7 @@
 
 				float offset = 1 * (noise_base);
 
-				return _StarColor + float4(offset, offset, offset, 0);// -float4(thresh, thresh, thresh, 0);
+				return _StarColor +float4(offset, offset, offset, 0);// -float4(thresh, thresh, thresh, 0);
 			}
 
 			ENDCG

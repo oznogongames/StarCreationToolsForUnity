@@ -7,10 +7,15 @@ using UnityEngine;
 //TODO: Variable stars, calculation of mass, rotation, temperature, radiation, luminosity, magnitude, structure, designation, etc. 
 public class Star : MonoBehaviour
 {
+
+    public bool manualColors = false;   //If true, temperature/luminosity don't matter and color is set by user.
+
     public double temperatureKelvin = 0;
     public double radiusKm = 6371;
     public double massKg = 6e24;
     public Vector3 rotationRates = new Vector3(0, -1, 0);
+
+    public Color baseStarColor = Color.white;
 
     //TODO
     public double rotationRate = 0.1;//Measured in radians per second
@@ -56,13 +61,13 @@ public class Star : MonoBehaviour
     {
         //TODO move this to start
         GetComponent<Renderer>().material.SetColor("_StarColor", GetColor());
-        GetComponent<Renderer>().material.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, 49));
+        GetComponent<Renderer>().material.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f - 1));
         GetComponent<Renderer>().material.SetVector("_RotRate", new Vector4(rotationRates.x, rotationRates.y, rotationRates.z, 0));
 
         foreach (GameObject coronaStrip in coronaStrips)
         {
             coronaStrip.GetComponent<Renderer>().material.SetColor("_StarColor", GetColor());
-            coronaStrip.GetComponent<Renderer>().material.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, 49));
+            coronaStrip.GetComponent<Renderer>().material.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f - 1));
         }
 
         GetComponentInChildren<Light>().color = GetColor();
@@ -273,6 +278,12 @@ public class Star : MonoBehaviour
     // besides doing the actual physics equations
     public Color GetColor()
     {
+
+        if(manualColors)
+        {
+            return baseStarColor;
+        }
+
         /*
         http://www.vendian.org/mncharity/dir3/starcolor/details.html
          */
@@ -318,10 +329,7 @@ public class Star : MonoBehaviour
 
             //Interpolate
             return interpolatedColor;
-
-
         }
-
 
         return hexCodeToColor(colorCode);
     }
