@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MorphStar : Star {
+[ExecuteInEditMode]
+public class MorphStar : MonoBehaviour {
 
     public bool size = false;
     public bool color = false;
     public bool timescale = false;
     public bool resolution = false;
-    public bool corona = false;
+    public bool contrast = false;
     public bool rotation = false;
 
+    private Star myStar;
+
     // Update is called once per frame
-    public new void Update () {
-        base.Update();
+    public void Update () {
+        myStar = GetComponent<Star>();
         if(color)
         {
             UpdateColors();
@@ -34,16 +37,22 @@ public class MorphStar : Star {
         {
             UpdateResolution();
         }
-        if(corona)
+        if(contrast)
         {
-            //todo
+            UpdateContrast();
         }
 	}
+
+    public void UpdateContrast()
+    {
+        float scale = (1 + Mathf.Sin(Time.time / 3f)) * 2f + 0.1f;
+        myStar.contrast = scale;
+    }
 
     public void UpdateScale()
     {
         float scale = (1 + Mathf.Sin(Time.time / 3f)) * 60 + 30;
-        this.transform.localScale = new Vector3(scale, scale, scale);
+        myStar.transform.localScale = new Vector3(scale, scale, scale);
     }
 
     public void UpdateRotationRate()
@@ -53,24 +62,24 @@ public class MorphStar : Star {
         float rate_y = 1;
         float rate_z = 1;
 
-        this.rotationRates = new Vector3(rate_x, rate_y, rate_z);
+        myStar.rotationRates = new Vector3(rate_x, rate_y, rate_z);
     }
 
     public void UpdateTimeScale()
     {
         float scale = Mathf.Pow(1 + Mathf.Sin(Time.time / 3), 4);
-        this.timeScale = scale;
+        myStar.timeScale = scale;
     }
 
     public void UpdateResolution()
     {
         float scale = Mathf.Pow(1 + Mathf.Sin(Time.time / 5), 3) * 10 + 0.1f;
-        this.resolutionScale = scale;
+        myStar.resolutionScale = scale;
     }
 
 
     public void UpdateColors()
     {
-        this.baseStarColor = Color.HSVToRGB((Time.time / 10f) % 1, 0.5f + Mathf.PingPong(Time.time / 3, 0.5f), 1);
+        myStar.baseStarColor = Color.HSVToRGB((Time.time / 10f) % 1, 0.5f + Mathf.PingPong(Time.time / 3, 0.5f), 1);
     }
 }

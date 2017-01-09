@@ -13,8 +13,9 @@ public class Star : MonoBehaviour
     public float mass = 6e24f;
     public float timeScale = 1f;
     public float resolutionScale = 5f;
+    public float contrast = 1f;
     //public Vector4 coronaSettings = new Vector4(10, 5, 0, 0);
-    public Vector3 rotationRates = new Vector3(0, -50, 0);
+    public Vector3 rotationRates = new Vector3(0, -1, 0);
 
     public Color baseStarColor = Color.white;
 
@@ -66,6 +67,7 @@ public class Star : MonoBehaviour
         tempMaterial.SetVector("_RotRate", new Vector4(rotationRates.x, rotationRates.y, rotationRates.z, 0));
         tempMaterial.SetFloat("_TimeScale", timeScale);
         tempMaterial.SetFloat("_Resolution", resolutionScale);
+        tempMaterial.SetFloat("_Contrast", contrast);
 
         GetComponent<Renderer>().material = tempMaterial;
 
@@ -81,6 +83,7 @@ public class Star : MonoBehaviour
             tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.lossyScale.x / 2f));
             tempMaterial.SetFloat("_TimeScale", timeScale);
             tempMaterial.SetFloat("_Resolution", resolutionScale);
+            tempMaterial.SetFloat("_Contrast", contrast);
             //coronaStrip.GetComponent<Renderer>().material.SetVector("_CoronaSettings", coronaSettings);
 
             coronaStrip.GetComponent<Renderer>().material = tempMaterial;

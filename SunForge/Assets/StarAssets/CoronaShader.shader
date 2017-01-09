@@ -9,6 +9,7 @@ Shader "SunForge/CoronaShader"
 		//_CoronaSettings("Corona settings", Vector) = (10, 5, 0, 0)
 		_TimeScale("Time Scale", Float) = 0.05
 		_Resolution("Resolution", Float) = 5
+		_Contrast("Contrast", Float) = 1
 		_RotRate("Rotation Speed", Vector) = (0, -1, 0, 0)
 
 	}
@@ -38,6 +39,7 @@ Shader "SunForge/CoronaShader"
 	float _TimeScale;
 	float _Resolution;
 	float4 _RotRate;
+	float _Contrast;
 
 
 	struct appdata
@@ -92,7 +94,7 @@ Shader "SunForge/CoronaShader"
 
 
 		float noiseFinal = (noise1 + noise2 + noise3 + noise4 - (noise5 * 1.5));
-		return noiseFinal;
+		return noiseFinal * _Contrast;
 	}
 
 	float4 frag(v2f i) : COLOR

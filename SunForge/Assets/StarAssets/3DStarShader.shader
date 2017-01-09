@@ -7,6 +7,7 @@
 		_StarCenter("Star Center", Vector) = (0, 0, 0, 0)
 		_StarColor("Star Color", Color) = (1, 1, 1, 1)
 		_RotRate("Rotation Speed", Vector) = (0, -1, 0, 0)
+		_Contrast("Contrast", Float) = 1
 	}
 		SubShader
 	{
@@ -34,6 +35,7 @@
 			float4 _RotRate;
 			float _TimeScale;
 			float _Resolution;
+			float _Contrast;
 
 			struct appdata
 			{
@@ -82,7 +84,7 @@
 
 
 				float noiseFinal = (noise1 + noise2 + noise3 + noise4 - (noise5 * 1.5));
-				return noiseFinal;
+				return noiseFinal * _Contrast;
 			}
 
 			float4 frag(v2f i) : COLOR
