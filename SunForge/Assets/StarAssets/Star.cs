@@ -58,38 +58,32 @@ public class Star : MonoBehaviour
     public void OnRenderObject()
     {
         //Get star mat
-        Material tempMaterial;
-        if (Application.isPlaying)
-            tempMaterial = GetComponent<Renderer>().sharedMaterial;
-        else
-            tempMaterial = GetComponent<Renderer>().sharedMaterial;
+        Material tempMaterial = new Material(GetComponent<Renderer>().sharedMaterial);
 
         //Set star properties
         tempMaterial.SetColor("_StarColor", GetColor());
-        tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f));
+        tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.lossyScale.x / 2f));
         tempMaterial.SetVector("_RotRate", new Vector4(rotationRates.x, rotationRates.y, rotationRates.z, 0));
         tempMaterial.SetFloat("_TimeScale", timeScale);
         tempMaterial.SetFloat("_Resolution", resolutionScale);
 
-        GetComponent<Renderer>().sharedMaterial = tempMaterial;
+        GetComponent<Renderer>().material = tempMaterial;
 
         foreach(GameObject coronaStrip in coronaStrips)
         {
 
             //Get corona mat
-            if (Application.isPlaying)
-                tempMaterial = coronaStrip.GetComponent<Renderer>().sharedMaterial;
-            else
-                tempMaterial = coronaStrip.GetComponent<Renderer>().sharedMaterial;
+            tempMaterial = new Material(coronaStrip.GetComponent<Renderer>().sharedMaterial);
+
 
             //Set corona properties
             tempMaterial.SetColor("_StarColor", GetColor());
-            tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f));
+            tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.lossyScale.x / 2f));
             tempMaterial.SetFloat("_TimeScale", timeScale);
             tempMaterial.SetFloat("_Resolution", resolutionScale);
             //coronaStrip.GetComponent<Renderer>().material.SetVector("_CoronaSettings", coronaSettings);
 
-            coronaStrip.GetComponent<Renderer>().sharedMaterial = tempMaterial;
+            coronaStrip.GetComponent<Renderer>().material = tempMaterial;
 
         }
 
