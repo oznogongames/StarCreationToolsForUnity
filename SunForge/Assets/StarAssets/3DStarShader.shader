@@ -2,10 +2,11 @@
 {
 	Properties
 	{
+		_TimeScale("Time Scale", Float) = 0.05
+		_Resolution("Resolution", Float) = 5
 		_StarCenter("Star Center", Vector) = (0, 0, 0, 0)
 		_StarColor("Star Color", Color) = (1, 1, 1, 1)
-		_AbsMagnitude("Absolute Magnitude", Range(-12, 16)) = 4
-		_RotRate("Rotation speed", Vector) = (0, -1, 0, 0)
+		_RotRate("Rotation Speed", Vector) = (0, -1, 0, 0)
 	}
 		SubShader
 	{
@@ -30,8 +31,9 @@
 
 			float4 _StarColor;
 			float4 _StarCenter;
-			float _AbsMagnitude;
 			float4 _RotRate;
+			float _TimeScale;
+			float _Resolution;
 
 			struct appdata
 			{
@@ -83,20 +85,6 @@
 				return noiseFinal;
 			}
 
-			float star_base_noise_2D(float2 pos, float time)
-			{
-				float noise1 = snoise_turbulence_additive(pos / 5, time, 5);
-				float noise2 = snoise_turbulence_additive(pos / 10, time + 25, 5);
-				float noise3 = snoise_turbulence_minimized(pos * min(noise1, noise2), time + 50, 2) * 2;
-				float noise4 = snoise_turbulence_additive(pos, time, 3);
-
-				float noise5 = snoise_turbulence_additive(pos / 25, time * 0.3, 5);
-
-
-				float noiseFinal = (noise1 + noise2 + noise3 + noise4 - (noise5 * 1.5));
-				return noiseFinal;
-			}
-
 			float4 frag(v2f i) : COLOR
 			{
 				//Need to find RGB, then a multiplier based off of apparent magnitude
@@ -104,14 +92,10 @@
 				//For B-V, 0 is about pure blue and 1.5 is about pure red
 				//0.5 is whiteish, 1 is yellowish.
 
-				float time_offset = _Time.y * 0.05;
-				float3 pos_offset = i.position_in_world_space / 5;
+				float time_offset = _Time * _TimeScale;
+				float3 pos_offset = i.position_in_world_space / _Resolution;
 
 				float noise_base = (star_base_noise(pos_offset , time_offset));
-				//Simulate corona???????
-				noise_base += (star_base_noise(pos_offset, time_offset * 10)) * 0.5;
-
-
 
 				float offset = 1 * (noise_base);
 

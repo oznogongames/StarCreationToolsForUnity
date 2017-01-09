@@ -2,75 +2,104 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//A UObj extension that creates all of the needed properties for a star
-//This means class, surface activity, flares, light, etc.
-//TODO: Variable stars, calculation of mass, rotation, temperature, radiation, luminosity, magnitude, structure, designation, etc. 
+[ExecuteInEditMode]
 public class Star : MonoBehaviour
 {
 
     public bool manualColors = false;   //If true, temperature/luminosity don't matter and color is set by user.
 
-    public double temperatureKelvin = 0;
-    public double radiusKm = 6371;
-    public double massKg = 6e24;
-    public Vector3 rotationRates = new Vector3(0, -1, 0);
+    public float temperatureKelvin = 0;
+    public float radius = 6371;
+    public float mass = 6e24f;
+    public float timeScale = 1f;
+    public float resolutionScale = 5f;
+    //public Vector4 coronaSettings = new Vector4(10, 5, 0, 0);
+    public Vector3 rotationRates = new Vector3(0, -50, 0);
 
     public Color baseStarColor = Color.white;
 
-    //TODO
-    public double rotationRate = 0.1;//Measured in radians per second
-
-    public double GetArea()
+    public float GetArea()
     {
-        return 4d * System.Math.PI * GetRadius() * GetRadius();
+        return 4f * Mathf.PI * GetRadius() * GetRadius();
     }
 
-    public double GetRadius()
+    public float GetRadius()
     {
-        return radiusKm;
+        return radius;
     }
 
-    public double GetDiameter()
+    public float GetDiameter()
     {
         return GetRadius() * 2;
     }
 
-    public double GetVolume()
+    public float GetVolume()
     {
-        return 4d / 3d * System.Math.PI * GetRadius() * GetRadius() * GetRadius();
+        return 4f / 3f * Mathf.PI * GetRadius() * GetRadius() * GetRadius();
     }
 
-    public double GetDensity()
+    public float GetDensity()
     {
         return GetMass() / GetVolume();
     }
 
-    public double GetMass()
+    public float GetMass()
     {
-        return massKg;
+        return mass;
     }
 
-    public double GetTemperature()
+    public float GetTemperature()
     {
         return temperatureKelvin;
     }
 
     public GameObject[] coronaStrips;
 
-    public void Update()
+    public void OnRenderObject()
     {
-        //TODO move this to start
-        GetComponent<Renderer>().material.SetColor("_StarColor", GetColor());
-        GetComponent<Renderer>().material.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f - 1));
-        GetComponent<Renderer>().material.SetVector("_RotRate", new Vector4(rotationRates.x, rotationRates.y, rotationRates.z, 0));
+        //Get star mat
+        Material tempMaterial;
+        if (Application.isPlaying)
+            tempMaterial = GetComponent<Renderer>().sharedMaterial;
+        else
+            tempMaterial = GetComponent<Renderer>().sharedMaterial;
 
-        foreach (GameObject coronaStrip in coronaStrips)
+        //Set star properties
+        tempMaterial.SetColor("_StarColor", GetColor());
+        tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f));
+        tempMaterial.SetVector("_RotRate", new Vector4(rotationRates.x, rotationRates.y, rotationRates.z, 0));
+        tempMaterial.SetFloat("_TimeScale", timeScale);
+        tempMaterial.SetFloat("_Resolution", resolutionScale);
+
+        GetComponent<Renderer>().sharedMaterial = tempMaterial;
+
+        foreach(GameObject coronaStrip in coronaStrips)
         {
-            coronaStrip.GetComponent<Renderer>().material.SetColor("_StarColor", GetColor());
-            coronaStrip.GetComponent<Renderer>().material.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f - 1));
+
+            //Get corona mat
+            if (Application.isPlaying)
+                tempMaterial = coronaStrip.GetComponent<Renderer>().sharedMaterial;
+            else
+                tempMaterial = coronaStrip.GetComponent<Renderer>().sharedMaterial;
+
+            //Set corona properties
+            tempMaterial.SetColor("_StarColor", GetColor());
+            tempMaterial.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.localScale.x / 2f));
+            tempMaterial.SetFloat("_TimeScale", timeScale);
+            tempMaterial.SetFloat("_Resolution", resolutionScale);
+            //coronaStrip.GetComponent<Renderer>().material.SetVector("_CoronaSettings", coronaSettings);
+
+            coronaStrip.GetComponent<Renderer>().sharedMaterial = tempMaterial;
+
         }
 
+        //Set light properties
         GetComponentInChildren<Light>().color = GetColor();
+    }
+
+    public void Update()
+    {
+
     }
 
     public string GetStarClass()
@@ -279,7 +308,7 @@ public class Star : MonoBehaviour
     public Color GetColor()
     {
 
-        if(manualColors)
+        if (manualColors)
         {
             return baseStarColor;
         }
