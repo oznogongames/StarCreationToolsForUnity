@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "SunForge/CoronaShader"
+﻿Shader "StarTools/CoronaShader"
 {
 	Properties
 	{
@@ -83,33 +81,19 @@ Shader "SunForge/CoronaShader"
 		return o;
 	}
 
-	float star_base_noise_color(float3 pos, float time)
-	{
-		float noise1 = snoise_turbulence_additive(pos / 5, time, 5);
-		float noise2 = snoise_turbulence_additive(pos / 10, time + 25, 5);
-		float noise3 = snoise_turbulence_minimized(pos * min(noise1, noise2), time + 50, 2) * 2;
-		float noise4 = snoise_turbulence_additive(pos, time, 3);
-
-		float noise5 = snoise_turbulence_additive(pos / 25, time * 0.3, 5);
-
-
-		float noiseFinal = (noise1 + noise2 + noise3 + noise4 - (noise5 * 1.5));
-		return noiseFinal * _Contrast;
-	}
-
 	float4 frag(v2f i) : COLOR
 	{   //First get color
 		float time_offset = _Time * _TimeScale;
 	float3 pos_offset = i.position_in_world_space / _Resolution;
 
-	float noise_base = (star_base_noise_color(pos_offset , time_offset));
+	float noise_base = (star_base_noise(pos_offset , time_offset, _Contrast));
 	float4 color = _StarColor + float4(noise_base, noise_base, noise_base, 0);
 
 	//Get distance as a ratio
 	float distanceFromSurface = (i.dist);
 	float distanceRatio = (_StarCenter.w) / distanceFromSurface;
 
-	noise_base = pow(distanceRatio + 0.05, 10);
+	noise_base = pow(distanceRatio + 0.05, 9);
 	color.w = noise_base;
 
 	return color;

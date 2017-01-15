@@ -5,62 +5,25 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Star : MonoBehaviour
 {
-
     public bool manualColors = false;   //If true, temperature/luminosity don't matter and color is set by user.
 
-    public float temperatureKelvin = 0;
-    public float radius = 6371;
-    public float mass = 6e24f;
     public float timeScale = 1f;
     public float resolutionScale = 5f;
     public float contrast = 1f;
-    //public Vector4 coronaSettings = new Vector4(10, 5, 0, 0);
     public Vector3 rotationRates = new Vector3(0, -1, 0);
 
     public Color baseStarColor = Color.white;
-
-    public float GetArea()
-    {
-        return 4f * Mathf.PI * GetRadius() * GetRadius();
-    }
-
-    public float GetRadius()
-    {
-        return radius;
-    }
-
-    public float GetDiameter()
-    {
-        return GetRadius() * 2;
-    }
-
-    public float GetVolume()
-    {
-        return 4f / 3f * Mathf.PI * GetRadius() * GetRadius() * GetRadius();
-    }
-
-    public float GetDensity()
-    {
-        return GetMass() / GetVolume();
-    }
-
-    public float GetMass()
-    {
-        return mass;
-    }
-
-    public float GetTemperature()
-    {
-        return temperatureKelvin;
-    }
 
     public GameObject[] coronaStrips;
 
     MaterialPropertyBlock mpb;
 
+    public float temperatureKelvin = 0;
+    private float cachedB_v = 0;
+
+    //Set materials
     public void OnRenderObject()
     {
-
         if (mpb == null)
         {
             mpb = new MaterialPropertyBlock();
@@ -86,6 +49,30 @@ public class Star : MonoBehaviour
         }
         if (GetComponent<ParticleSystemRenderer>() != null)
             GetComponent<ParticleSystemRenderer>().SetPropertyBlock(mpb);
+    }
+
+    public float GetTemperature()
+    {
+        return temperatureKelvin;
+    }
+
+    public void SetTemperature(float temp_kelvin)
+    {
+        temperatureKelvin = temp_kelvin;
+        RecalculateB_V();
+        RecalculateScienceColor();
+    }
+
+    public float GetB_V()
+    {
+        return cachedB_v;
+    }
+
+    public void SetB_V(float bmv)
+    {
+        cachedB_v = bmv;
+        RecalculateTemperature();
+        RecalculateScienceColor();
     }
 
     public string GetStarClass()
@@ -216,7 +203,7 @@ public class Star : MonoBehaviour
 
 
     private static readonly float[] bMinusVLookup = {
-        -.45f,  //Made up for blending
+        -5.5f,  //Made up for blending
         -.40f,
         -.35f,
         -.30f,
@@ -266,7 +253,7 @@ public class Star : MonoBehaviour
         1.90f,
         1.95f,
         2.00f,
-        2.05f   //Made up for blending
+        8.5f   //Made up for blending
     };
 
     public static bool StarLookupTablesTest()
@@ -286,31 +273,78 @@ public class Star : MonoBehaviour
         return true;
     }
 
-    //Approximates a color based off of temperature data
-    //TODO can be improved
-    //These are just approximations from a lookup table, 
-    // there is no fast and accurate equation as far as I'm aware
-    // besides doing the actual physics equations
-    public Color GetColor()
+    public void Start()
     {
-
-        if (manualColors)
+        if (!manualColors)
         {
-            return baseStarColor;
+            SetTemperature(GetTemperature());
         }
+    }
 
+    //Get temp from B-v
+    private void RecalculateTemperature()
+    {
         /*
-        http://www.vendian.org/mncharity/dir3/starcolor/details.html
-         */
-        string colorCode = "";
+http://www.vendian.org/mncharity/dir3/starcolor/details.html
+ */
+        //First find if it's out of bounds, and if so set the appropriate color
+        if (GetB_V() <= bMinusVLookup[0])
+        {
+            temperatureKelvin = temperatureLookup[0];
+        }
+        else if (GetB_V() >= bMinusVLookup[bMinusVLookup.Length - 1])
+        {
+            temperatureKelvin = temperatureLookup[temperatureLookup.Length - 1];
+        }
+        else
+        {
+            //It's in bounds, so find the closest two color/temperature pairs and do a linear interpolation
+            //Or the exact color if it matches perfectly
+            //This can be sped up later on TODO
+            int max = 0;
+            int min = bMinusVLookup.Length - 1;
+            for (int i = 0; i < bMinusVLookup.Length; i++)
+            {
+                //Handle exact match
+                if (bMinusVLookup[i] == GetB_V())
+                {
+                    temperatureKelvin = temperatureLookup[i];
+                    return;
+                }
+                if (bMinusVLookup[i] < GetB_V() && bMinusVLookup[i] > bMinusVLookup[max])
+                {
+                    max = i;
+                }
+                else if (bMinusVLookup[i] > GetB_V() && bMinusVLookup[i] < bMinusVLookup[min])
+                {
+                    min = i;
+                }
+            }
+
+            float interpolatedTemp = Mathf.Lerp(
+                temperatureLookup[min],
+                temperatureLookup[max],
+                (float)(GetB_V() - bMinusVLookup[min]) / (float)(bMinusVLookup[max] - bMinusVLookup[min]));
+
+            //Interpolate
+            temperatureKelvin = interpolatedTemp;
+        }
+    }
+
+    //Get b-v from temp
+    private void RecalculateB_V()
+    {
+        /*
+http://www.vendian.org/mncharity/dir3/starcolor/details.html
+ */
         //First find if it's out of bounds, and if so set the appropriate color
         if (GetTemperature() >= temperatureLookup[0])
         {
-            colorCode = colorLookup[0];
+            cachedB_v = bMinusVLookup[0];
         }
         else if (GetTemperature() <= temperatureLookup[temperatureLookup.Length - 1])
         {
-            colorCode = colorLookup[colorLookup.Length - 1];
+            cachedB_v = bMinusVLookup[bMinusVLookup.Length - 1];
         }
         else
         {
@@ -324,8 +358,64 @@ public class Star : MonoBehaviour
                 //Handle exact match
                 if (temperatureLookup[i] == GetTemperature())
                 {
-                    //colorCode = colorLookup[i];
-                    //break;
+                    cachedB_v = bMinusVLookup[i];
+                    return;
+                }
+                if (temperatureLookup[i] > GetTemperature() && temperatureLookup[i] < temperatureLookup[max])
+                {
+                    max = i;
+                }
+                else if (temperatureLookup[i] < GetTemperature() && temperatureLookup[i] > temperatureLookup[min])
+                {
+                    min = i;
+                }
+            }
+
+            float interpolatedB_V = Mathf.Lerp(
+                bMinusVLookup[min],
+                bMinusVLookup[max],
+                (float)(GetTemperature() - temperatureLookup[min]) / (float)(temperatureLookup[max] - temperatureLookup[min]));
+
+            //Interpolate
+            cachedB_v = interpolatedB_V;
+        }
+    }
+
+    //Approximates a color based off of temperature data
+    //These are just approximations from a lookup table, 
+    // there is no fast and accurate equation as far as I'm aware
+    // besides doing the actual physics equations
+    //Must be called AFTER the temperature reset
+    private void RecalculateScienceColor()
+    {
+        /*
+        http://www.vendian.org/mncharity/dir3/starcolor/details.html
+         */
+        //First find if it's out of bounds, and if so set the appropriate color
+        if (GetTemperature() >= temperatureLookup[0])
+        {
+            baseStarColor = hexCodeToColor(colorLookup[0]);
+            return;
+        }
+        else if (GetTemperature() <= temperatureLookup[temperatureLookup.Length - 1])
+        {
+            baseStarColor = hexCodeToColor(colorLookup[colorLookup.Length - 1]);
+            return;
+        }
+        else
+        {
+            //It's in bounds, so find the closest two color/temperature pairs and do a linear interpolation
+            //Or the exact color if it matches perfectly
+            //This can be sped up later on TODO
+            int max = 0;
+            int min = temperatureLookup.Length - 1;
+            for (int i = 0; i < temperatureLookup.Length; i++)
+            {
+                //Handle exact match
+                if (temperatureLookup[i] == GetTemperature())
+                {                    
+                    baseStarColor = hexCodeToColor(colorLookup[i]);
+                    return;
                 }
                 if (temperatureLookup[i] > GetTemperature() && temperatureLookup[i] < temperatureLookup[max])
                 {
@@ -343,10 +433,19 @@ public class Star : MonoBehaviour
                 (float)(GetTemperature() - temperatureLookup[min]) / (float)(temperatureLookup[max] - temperatureLookup[min]));
 
             //Interpolate
-            return interpolatedColor;
+            baseStarColor = interpolatedColor;
         }
+    }
 
-        return hexCodeToColor(colorCode);
+    public Color GetColor()
+    {
+        return baseStarColor;
+    }
+
+    public void SetColor(Color newColor)
+    {
+        manualColors = true;
+        baseStarColor = newColor;
     }
 
     private Color hexCodeToColor(string hex)

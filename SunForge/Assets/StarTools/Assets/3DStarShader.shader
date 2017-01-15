@@ -1,4 +1,4 @@
-﻿Shader "SunForge/3DStarShader"
+﻿Shader "StarTools/3DStarShader"
 {
 	Properties
 	{
@@ -97,7 +97,7 @@
 				float time_offset = _Time * _TimeScale;
 				float3 pos_offset = i.position_in_world_space / _Resolution;
 
-				float noise_base = (star_base_noise(pos_offset , time_offset));
+				float noise_base = (star_base_noise(pos_offset , time_offset, _Contrast));
 
 				float offset = 1 * (noise_base);
 

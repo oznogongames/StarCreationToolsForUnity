@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Sun Forge/Demo.unity
+- path: Assets/StarTools/Demo.unity
   isLoaded: 1
   isActive: 1

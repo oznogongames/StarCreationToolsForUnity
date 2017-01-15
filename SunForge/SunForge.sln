@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SunForge", "SunForge.csproj", "{47703AB5-A7FD-A4CA-23A6-20A4A2C32846}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SunForge.Editor", "SunForge.Editor.csproj", "{FB52208A-B332-E3BF-EB71-6BFF3F8A28A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{47703AB5-A7FD-A4CA-23A6-20A4A2C32846}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47703AB5-A7FD-A4CA-23A6-20A4A2C32846}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47703AB5-A7FD-A4CA-23A6-20A4A2C32846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB52208A-B332-E3BF-EB71-6BFF3F8A28A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB52208A-B332-E3BF-EB71-6BFF3F8A28A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB52208A-B332-E3BF-EB71-6BFF3F8A28A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB52208A-B332-E3BF-EB71-6BFF3F8A28A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

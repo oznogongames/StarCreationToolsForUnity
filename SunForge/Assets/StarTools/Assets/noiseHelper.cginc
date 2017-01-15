@@ -5,16 +5,6 @@
 
 #define PI 3.141592653589793
 
-
-inline float2 RadialCoords(float3 a_coords)
-{
-	float3 a_coords_n = normalize(a_coords);
-	float lon = atan2(a_coords_n.z, a_coords_n.x);
-	float lat = acos(a_coords_n.y);
-	float2 sphereCoords = float2(lon, lat) * (1.0 / PI);
-	return float2(sphereCoords.x * 0.5 + 0.5, 1 - sphereCoords.y);
-}
-
 float snoise_n1_to_1(float4 pos)
 {
 	return 2 * (snoise(pos) - 0.5);
@@ -89,6 +79,20 @@ float snoise_turbulence_minimized(float2 pos, float time, int raised)
 		val = min(val, (0.5 / power) * snoise(float3(pos.xy * power, time)));
 	}
 	return val;
+}
+
+float star_base_noise(float3 pos, float time, float contrast)
+{
+	float noise1 = snoise_turbulence_additive(pos / 5, time, 5);
+	float noise2 = snoise_turbulence_additive(pos / 10, time + 25, 5);
+	float noise3 = snoise_turbulence_minimized(pos * min(noise1, noise2), time + 50, 2) * 2;
+	float noise4 = snoise_turbulence_additive(pos, time, 3);
+
+	float noise5 = snoise_turbulence_additive(pos / 25, time * 0.3, 5);
+
+
+	float noiseFinal = (noise1 + noise2 + noise3 + noise4 - (noise5 * 1.5));
+	return noiseFinal * contrast;
 }
 
 #endif
