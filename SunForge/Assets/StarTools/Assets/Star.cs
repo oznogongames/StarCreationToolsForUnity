@@ -413,7 +413,7 @@ http://www.vendian.org/mncharity/dir3/starcolor/details.html
             {
                 //Handle exact match
                 if (temperatureLookup[i] == GetTemperature())
-                {                    
+                {
                     baseStarColor = hexCodeToColor(colorLookup[i]);
                     return;
                 }
