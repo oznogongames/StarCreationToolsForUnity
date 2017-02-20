@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * This is a simple example of how to use the Star class to modify values in real time.
+ */ 
 [ExecuteInEditMode]
 public class MorphStar : MonoBehaviour {
 
@@ -14,7 +17,6 @@ public class MorphStar : MonoBehaviour {
 
     private Star myStar;
 
-    // Update is called once per frame
     public void Update () {
         myStar = GetComponent<Star>();
         if(color)
