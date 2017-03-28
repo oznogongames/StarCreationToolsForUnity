@@ -10,6 +10,178 @@ using UnityEngine;
  */
 [ExecuteInEditMode]
 public class Star : MonoBehaviour {
+
+
+
+    //This array is 1-to-1 with the b-v and color lookups, so that we can interpolate to get values
+    private static readonly float[] temperatureLookupDefault = {
+        500000, //Made up entry for blending
+        113017,
+        56701,
+        33605,
+        22695,
+        16954,
+        13674,
+        11677,
+        10395,
+        9531,
+        8917,
+        8455,
+        8084,
+        7767,
+        7483,
+        7218,
+        6967,
+        6728,
+        6500,
+        6285,
+        6082,
+        5895,
+        5722,
+        5563,
+        5418,
+        5286,
+        5164,
+        5052,
+        4948,
+        4849,
+        4755,
+        4664,
+        4576,
+        4489,
+        4405,
+        4322,
+        4241,
+        4159,
+        4076,
+        3989,
+        3892,
+        3779,
+        3640,
+        3463,
+        3234,
+        2942,
+        2579,
+        2150,
+        1675,
+        1195,
+        0 //Made up entry for blending
+};
+    //This array is 1-to-1 with the b-v and temperature lookups, so that we can interpolate to get values
+    private static readonly string[] colorLookupDefault = {
+        "0000ff",   //Made up color for blending
+        "9bb2ff",
+        "9eb5ff",
+        "a3b9ff",
+        "aabfff",
+        "b2c5ff",
+        "bbccff",
+        "c4d2ff",
+        "ccd8ff",
+        "d3ddff",
+        "dae2ff",
+        "dfe5ff",
+        "e4e9ff",
+        "e9ecff",
+        "eeefff",
+        "f3f2ff",
+        "f8f6ff",
+        "fef9ff",
+        "fff9fb",
+        "fff7f5",
+        "fff5ef",
+        "fff3ea",
+        "fff1e5",
+        "ffefe0",
+        "ffeddb",
+        "ffebd6",
+        "ffe9d2",
+        "ffe8ce",
+        "ffe6ca",
+        "ffe5c6",
+        "ffe3c3",
+        "ffe2bf",
+        "ffe0bb",
+        "ffdfb8",
+        "ffddb4",
+        "ffdbb0",
+        "ffdaad",
+        "ffd8a9",
+        "ffd6a5",
+        "ffd5a1",
+        "ffd29c",
+        "ffd096",
+        "ffcc8f",
+        "ffc885",
+        "ffc178",
+        "ffb765",
+        "ffa94b",
+        "ff9523",
+        "ff7b00",
+        "ff5200",
+        "ff0000"//Made up color for blending
+    };
+
+    //This array is 1-to-1 with the temperature and color lookups, so that we can interpolate to get values
+    private static readonly float[] bMinusVLookupDefault = {
+        -5.5f,  //Made up for blending
+        -.40f,
+        -.35f,
+        -.30f,
+        -.25f,
+        -.20f,
+        -.15f,
+        -.10f,
+        -.05f,
+        0f,
+        .05f,
+        .10f,
+        .15f,
+        .20f,
+        .25f,
+        .30f,
+        .35f,
+        .40f,
+        .45f,
+        .50f,
+        .55f,
+        .60f,
+        .65f,
+        .70f,
+        .75f,
+        .80f,
+        .85f,
+        .90f,
+        .95f,
+        1.00f,
+        1.05f,
+        1.10f,
+        1.15f,
+        1.20f,
+        1.25f,
+        1.30f,
+        1.35f,
+        1.40f,
+        1.45f,
+        1.50f,
+        1.55f,
+        1.60f,
+        1.65f,
+        1.70f,
+        1.75f,
+        1.80f,
+        1.85f,
+        1.90f,
+        1.95f,
+        2.00f,
+        8.5f   //Made up for blending
+    };
+
+
+    private float[] bMinusVLookup = bMinusVLookupDefault;
+    private string[] colorLookup = colorLookupDefault;
+    float[] temperatureLookup = temperatureLookupDefault;
+
     public bool manualColors = false;   //If true, temperature/luminosity don't matter and color is set by user.
 
     public float timeScale = 1f;    //Speed at which shader changes
@@ -25,6 +197,15 @@ public class Star : MonoBehaviour {
 
     public float temperatureKelvin = 0;
     private float cachedB_v = 0;
+
+    public void SetLookupTables(float[] temperature, float[] bMinusV, string[] colors) {
+        this.temperatureLookup = temperature;
+        this.colorLookup = colors;
+        this.bMinusVLookup = bMinusV;
+        if(!StarLookupTablesTest()) {
+            Debug.LogError("Invalid lookup tables set. Please ensure that all tables are the same length, and are in order.");
+        }
+    }
 
     //Set materials
     public void OnRenderObject() {
@@ -95,172 +276,10 @@ public class Star : MonoBehaviour {
         return "O";
     }
 
-    //This array is 1-to-1 with the b-v and color lookups, so that we can interpolate to get values
-    private static readonly float[] temperatureLookup = {
-        500000, //Made up entry for blending
-        113017,
-        56701,
-        33605,
-        22695,
-        16954,
-        13674,
-        11677,
-        10395,
-        9531,
-        8917,
-        8455,
-        8084,
-        7767,
-        7483,
-        7218,
-        6967,
-        6728,
-        6500,
-        6285,
-        6082,
-        5895,
-        5722,
-        5563,
-        5418,
-        5286,
-        5164,
-        5052,
-        4948,
-        4849,
-        4755,
-        4664,
-        4576,
-        4489,
-        4405,
-        4322,
-        4241,
-        4159,
-        4076,
-        3989,
-        3892,
-        3779,
-        3640,
-        3463,
-        3234,
-        2942,
-        2579,
-        2150,
-        1675,
-        1195,
-        0 //Made up entry for blending
-};
-    //This array is 1-to-1 with the b-v and temperature lookups, so that we can interpolate to get values
-    private static readonly string[] colorLookup = {
-        "0000ff",   //Made up color for blending
-        "9bb2ff",
-        "9eb5ff",
-        "a3b9ff",
-        "aabfff",
-        "b2c5ff",
-        "bbccff",
-        "c4d2ff",
-        "ccd8ff",
-        "d3ddff",
-        "dae2ff",
-        "dfe5ff",
-        "e4e9ff",
-        "e9ecff",
-        "eeefff",
-        "f3f2ff",
-        "f8f6ff",
-        "fef9ff",
-        "fff9fb",
-        "fff7f5",
-        "fff5ef",
-        "fff3ea",
-        "fff1e5",
-        "ffefe0",
-        "ffeddb",
-        "ffebd6",
-        "ffe9d2",
-        "ffe8ce",
-        "ffe6ca",
-        "ffe5c6",
-        "ffe3c3",
-        "ffe2bf",
-        "ffe0bb",
-        "ffdfb8",
-        "ffddb4",
-        "ffdbb0",
-        "ffdaad",
-        "ffd8a9",
-        "ffd6a5",
-        "ffd5a1",
-        "ffd29c",
-        "ffd096",
-        "ffcc8f",
-        "ffc885",
-        "ffc178",
-        "ffb765",
-        "ffa94b",
-        "ff9523",
-        "ff7b00",
-        "ff5200",
-        "ff0000"//Made up color for blending
-    };
 
-    //This array is 1-to-1 with the temperature and color lookups, so that we can interpolate to get values
-    private static readonly float[] bMinusVLookup = {
-        -5.5f,  //Made up for blending
-        -.40f,
-        -.35f,
-        -.30f,
-        -.25f,
-        -.20f,
-        -.15f,
-        -.10f,
-        -.05f,
-        0f,
-        .05f,
-        .10f,
-        .15f,
-        .20f,
-        .25f,
-        .30f,
-        .35f,
-        .40f,
-        .45f,
-        .50f,
-        .55f,
-        .60f,
-        .65f,
-        .70f,
-        .75f,
-        .80f,
-        .85f,
-        .90f,
-        .95f,
-        1.00f,
-        1.05f,
-        1.10f,
-        1.15f,
-        1.20f,
-        1.25f,
-        1.30f,
-        1.35f,
-        1.40f,
-        1.45f,
-        1.50f,
-        1.55f,
-        1.60f,
-        1.65f,
-        1.70f,
-        1.75f,
-        1.80f,
-        1.85f,
-        1.90f,
-        1.95f,
-        2.00f,
-        8.5f   //Made up for blending
-    };
 
     //Only use this function if you've changed the lookup tables and need to test that they are still valid
-    public static bool StarLookupTablesTest() {
+    public bool StarLookupTablesTest() {
         Debug.Log(bMinusVLookup.Length + ", " + temperatureLookup.Length + ", " + colorLookup.Length);
         //Test lengths
         if (bMinusVLookup.Length != temperatureLookup.Length || temperatureLookup.Length != colorLookup.Length)
