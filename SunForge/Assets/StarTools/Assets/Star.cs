@@ -11,8 +11,6 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Star : MonoBehaviour {
 
-
-
     //This array is 1-to-1 with the b-v and color lookups, so that we can interpolate to get values
     private static readonly float[] temperatureLookupDefault = {
         500000, //Made up entry for blending
@@ -66,7 +64,8 @@ public class Star : MonoBehaviour {
         1675,
         1195,
         0 //Made up entry for blending
-};
+    };
+
     //This array is 1-to-1 with the b-v and temperature lookups, so that we can interpolate to get values
     private static readonly string[] colorLookupDefault = {
         "0000ff",   //Made up color for blending
@@ -177,7 +176,6 @@ public class Star : MonoBehaviour {
         8.5f   //Made up for blending
     };
 
-
     private float[] bMinusVLookup = bMinusVLookupDefault;
     private string[] colorLookup = colorLookupDefault;
     float[] temperatureLookup = temperatureLookupDefault;
@@ -202,7 +200,7 @@ public class Star : MonoBehaviour {
         this.temperatureLookup = temperature;
         this.colorLookup = colors;
         this.bMinusVLookup = bMinusV;
-        if(!StarLookupTablesTest()) {
+        if (!StarLookupTablesTest()) {
             Debug.LogError("Invalid lookup tables set. Please ensure that all tables are the same length, and are in order.");
         }
     }
