@@ -118,7 +118,7 @@ public class Star : MonoBehaviour {
         "ff9523",
         "ff7b00",
         "ff5200",
-        "ff0000"//Made up color for blending
+        "000000" //Made up color for blending, black. In theory a star should never reach this.
     };
 
     //This array is 1-to-1 with the temperature and color lookups, so that we can interpolate to get values
@@ -178,7 +178,7 @@ public class Star : MonoBehaviour {
 
     private float[] bMinusVLookup = bMinusVLookupDefault;
     private string[] colorLookup = colorLookupDefault;
-    float[] temperatureLookup = temperatureLookupDefault;
+    private float[] temperatureLookup = temperatureLookupDefault;
 
     public bool manualColors = false;   //If true, temperature/luminosity don't matter and color is set by user.
 
@@ -274,11 +274,8 @@ public class Star : MonoBehaviour {
         return "O";
     }
 
-
-
     //Only use this function if you've changed the lookup tables and need to test that they are still valid
     public bool StarLookupTablesTest() {
-        Debug.Log(bMinusVLookup.Length + ", " + temperatureLookup.Length + ", " + colorLookup.Length);
         //Test lengths
         if (bMinusVLookup.Length != temperatureLookup.Length || temperatureLookup.Length != colorLookup.Length)
             return false;
