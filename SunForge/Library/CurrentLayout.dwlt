@@ -199,8 +199,8 @@ MonoBehaviour:
     y: 0
     width: 471
     height: 663
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_MinSize: {x: 336, y: 271}
   m_MaxSize: {x: 14006, y: 10021}
   vertical: 0
-  controlID: 84
+  controlID: 133
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -437,9 +437,9 @@ MonoBehaviour:
     height: 642
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 40270000
-    m_LastClickedID: 10048
-    m_ExpandedIDs: e0fbffff0000000098270000a6270000
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: e0fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -494,9 +494,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1138.4104, y: 49.42994, z: -1231.266}
+    m_Target: {x: -521.7474, y: 163.64803, z: -499.0272}
     speed: 2
-    m_Value: {x: -1138.4104, y: 49.42994, z: -1231.266}
+    m_Value: {x: -521.7474, y: 163.64803, z: -499.0272}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -519,13 +519,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.026418244, y: -0.8648342, z: 0.04578951, w: 0.4992667}
+    m_Target: {x: -0.06501697, y: 0.81135887, z: -0.091992766, w: -0.57359135}
     speed: 2
-    m_Value: {x: 0.026418244, y: -0.8648342, z: 0.04578951, w: 0.4992667}
+    m_Value: {x: -0.06501697, y: 0.81135887, z: -0.091992766, w: -0.57359135}
   m_Size:
-    m_Target: 795.52014
+    m_Target: 193.65788
     speed: 2
-    m_Value: 795.52014
+    m_Value: 193.65788
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -573,33 +573,33 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/StarTools/Assets
+    - Assets/StarTools/Prefabs
   m_ViewMode: 1
   m_StartGridSize: 67
   m_LastFolders:
-  - Assets/StarTools/Assets
+  - Assets/StarTools/Prefabs
   m_LastFoldersGridSize: 67
   m_LastProjectPath: C:\Users\Jake\Documents\GitHub\SunForge\SunForge
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 0a250000
-    m_LastClickedID: 9482
-    m_ExpandedIDs: 00000000d4240000002500000a250000ac2500008a2800008c2800008e28000090280000922800009428000096280000982800009a2800009c28000000ca9a3bffffff7f
+    m_SelectedIDs: 06250000
+    m_LastClickedID: 9478
+    m_ExpandedIDs: 00000000d62400000625000010250000c0250000aa280000ac280000ae280000b0280000b2280000b4280000b6280000b8280000ba280000bc28000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: StarTools
+      m_OriginalName: StarTools
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 9664
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 12}
     m_SearchString: 
@@ -613,7 +613,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000d4240000002500000a250000ac2500008a2800008c2800008e28000090280000922800009428000096280000982800009a2800009c280000
+    m_ExpandedIDs: 00000000d62400000625000010250000c0250000aa280000ac280000ae280000b0280000b2280000b4280000b6280000b8280000ba280000bc280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -641,7 +641,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: e01b0000141c0000ce1c0000b03c0000f021000048240000120a0000f42600001226000006260000c82e010056f8f5ffd8930100449701007c62feffdacdf4ffd4d8f4ff88f5f3ff882400004a2400001424000000000000
+    m_ExpandedInstanceIDs: e01b0000141c0000ce1c0000b03c0000f021000048240000120a0000f42600001226000006260000c82e010056f8f5ffd8930100449701007c62feffdacdf4ffd4d8f4ff88f5f3ff882400004a2400001424000000000000b0250000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
