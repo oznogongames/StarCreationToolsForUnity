@@ -49,7 +49,7 @@
 	{
 		float4 vertex : POSITION;
 		float3 position_in_world_space : TEXCOORD0;
-		float dist : float;
+		float dist : TEXCOORD1;
 	};
 
 	v2f vert(appdata v)
