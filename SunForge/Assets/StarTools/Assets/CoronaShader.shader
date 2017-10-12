@@ -5,7 +5,7 @@
 		_StarCenter("Star Center", Vector) = (0, 0, 0, 0)	//x, y, z, radius
 		_StarColor("Star Color", Color) = (1, 1, 1, 1)
 		//_CoronaSettings("Corona settings", Vector) = (10, 5, 0, 0)
-		_TimeScale("Time Scale", Float) = 0.05
+		_LocalTime("LocalTime", Float) = 0.05
 		_Resolution("Resolution", Float) = 5
 		_Contrast("Contrast", Float) = 1
 		_RotRate("Rotation Speed", Vector) = (0, -1, 0, 0)
@@ -34,7 +34,7 @@
 		float4 _StarColor;
 	float4 _StarCenter;
 	//float4 _CoronaSettings;
-	float _TimeScale;
+	float _LocalTime;
 	float _Resolution;
 	float4 _RotRate;
 	float _Contrast;
@@ -60,14 +60,14 @@
 		o.position_in_world_space = float3(o.vertex.x, o.vertex.y, o.vertex.z) - _StarCenter.xyz;
 		o.vertex = UnityObjectToClipPos(v.vertex);
 
-		float s = sin(_RotRate.x * _Time);
-		float c = cos(_RotRate.x * _Time);
+		float s = sin(_RotRate.x);
+		float c = cos(_RotRate.x);
 		float3x3 rotationMatrix_x = float3x3(1, 0, 0, 0, c, -s, 0, s, c);
-		s = sin(_RotRate.y * _Time);
-		c = cos(_RotRate.y * _Time);
+		s = sin(_RotRate.y);
+		c = cos(_RotRate.y);
 		float3x3 rotationMatrix_y = float3x3(c, 0, s, 0, 1, 0, -s, 0, c);
-		s = sin(_RotRate.z * _Time);
-		c = cos(_RotRate.z * _Time);
+		s = sin(_RotRate.z);
+		c = cos(_RotRate.z);
 		float3x3 rotationMatrix_z = float3x3(c, -s, 0, s, c, 0, 0, 0, 1);
 
 		o.position_in_world_space = mul(o.position_in_world_space, rotationMatrix_x);
@@ -79,10 +79,9 @@
 
 	float4 frag(v2f i) : COLOR
 	{   //First get color
-		float time_offset = _Time * _TimeScale;
 	float3 pos_offset = i.position_in_world_space / _Resolution;
 
-	float noise_base = (star_base_noise(pos_offset , time_offset, _Contrast));
+	float noise_base = (star_base_noise(pos_offset , _LocalTime, _Contrast));
 	float4 color = _StarColor + float4(noise_base, noise_base, noise_base, 0);
 
 	//Get distance as a ratio

@@ -182,10 +182,14 @@ public class Star : MonoBehaviour {
 
     public bool manualColors = false;   //If true, temperature/luminosity don't matter and color is set by user.
 
+    public bool isPaused = false;
+
     public float timeScale = 1f;    //Speed at which shader changes
+    private float localTime = 0;
     public float resolutionScale = 5f;  //Blurriness
     public float contrast = 1f; //How dark the sun spots are
     public Vector3 rotationRates = new Vector3(0, -1, 0);   //Since the texture for a star is based off of 3d noise, we can rotate the entire thing
+    private Vector3 actualRotation = new Vector3(0, 0, 0);   //Since the texture for a star is based off of 3d noise, we can rotate the entire thing
 
     public Color baseStarColor = Color.white;
 
@@ -215,11 +219,17 @@ public class Star : MonoBehaviour {
         if (GetComponentInChildren<Light>() != null)
             GetComponentInChildren<Light>().color = GetColor();
 
+        //Handle pauses
+        if (!GetIsPaused()) {
+            localTime += Time.deltaTime * timeScale * 0.05f;    //Use 0.05 to set '1' timescale to a reasonable default
+            actualRotation += Time.deltaTime * rotationRates * timeScale * 0.05f;   //
+        }
+
         //Set star properties
         mpb.SetColor("_StarColor", GetColor());
         mpb.SetVector("_StarCenter", new Vector4(transform.position.x, transform.position.y, transform.position.z, transform.lossyScale.x / 2f));
-        mpb.SetVector("_RotRate", new Vector4(rotationRates.x, rotationRates.y, rotationRates.z, 0));
-        mpb.SetFloat("_TimeScale", timeScale);
+        mpb.SetVector("_RotRate", new Vector4(actualRotation.x, actualRotation.y, actualRotation.z, 0));
+        mpb.SetFloat("_LocalTime", localTime);
         mpb.SetFloat("_Resolution", resolutionScale);
         mpb.SetFloat("_Contrast", contrast);
 
@@ -228,8 +238,15 @@ public class Star : MonoBehaviour {
         for (int i = 0; i < coronaStrips.Length; i++) {
             coronaStrips[i].GetComponent<Renderer>().SetPropertyBlock(mpb);
         }
-        if (GetComponent<ParticleSystemRenderer>() != null)
+        if (GetComponent<ParticleSystemRenderer>() != null) {
             GetComponent<ParticleSystemRenderer>().SetPropertyBlock(mpb);
+            if (GetIsPaused()) {
+                GetComponent<ParticleSystem>().Pause();
+            }
+            else {
+                GetComponent<ParticleSystem>().Play();
+            }
+        }
     }
 
     //Returns the color in Kelvin
@@ -385,10 +402,10 @@ http://www.vendian.org/mncharity/dir3/starcolor/details.html
          */
         //First find if it's out of bounds, and if so set the appropriate color
         if (GetTemperature() >= temperatureLookup[0]) {
-            baseStarColor = hexCodeToColor(colorLookup[0]);
+            baseStarColor = HexCodeToColor(colorLookup[0]);
             return;
         } else if (GetTemperature() <= temperatureLookup[temperatureLookup.Length - 1]) {
-            baseStarColor = hexCodeToColor(colorLookup[colorLookup.Length - 1]);
+            baseStarColor = HexCodeToColor(colorLookup[colorLookup.Length - 1]);
             return;
         } else {
             //It's in bounds, so find the closest two color/temperature pairs and do a linear interpolation
@@ -399,7 +416,7 @@ http://www.vendian.org/mncharity/dir3/starcolor/details.html
             for (int i = 0; i < temperatureLookup.Length; i++) {
                 //Handle exact match
                 if (temperatureLookup[i] == GetTemperature()) {
-                    baseStarColor = hexCodeToColor(colorLookup[i]);
+                    baseStarColor = HexCodeToColor(colorLookup[i]);
                     return;
                 }
                 if (temperatureLookup[i] > GetTemperature() && temperatureLookup[i] < temperatureLookup[max]) {
@@ -410,8 +427,8 @@ http://www.vendian.org/mncharity/dir3/starcolor/details.html
             }
 
             Color interpolatedColor = Color.Lerp(
-                hexCodeToColor(colorLookup[min]),
-                hexCodeToColor(colorLookup[max]),
+                HexCodeToColor(colorLookup[min]),
+                HexCodeToColor(colorLookup[max]),
                 (float)(GetTemperature() - temperatureLookup[min]) / (float)(temperatureLookup[max] - temperatureLookup[min]));
 
             //Interpolate
@@ -431,11 +448,27 @@ http://www.vendian.org/mncharity/dir3/starcolor/details.html
     }
 
     //Helper function to convert a hex color code to a Unity color object
-    private Color hexCodeToColor(string hex) {
+    private Color HexCodeToColor(string hex) {
         byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
         byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
         byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
 
         return new Color(r / 255f, g / 255f, b / 255f);
+    }
+
+    public void Pause() {
+        isPaused = true;
+    }
+
+    public void TogglePause() {
+        isPaused = !isPaused;
+    }
+
+    public void UnPause() {
+        isPaused = false;
+    }
+
+    public bool GetIsPaused() {
+        return isPaused;
     }
 }

@@ -10,6 +10,7 @@ public class StarEditor : Editor {
     {
         Star targetStar = (Star)target;
 
+        targetStar.isPaused = EditorGUILayout.Toggle("Pause (freeze rotation and texture)", targetStar.isPaused);
 
         //Color selections, temp, and b-v
         targetStar.manualColors = EditorGUILayout.Toggle("Enable manual color selection", targetStar.manualColors);

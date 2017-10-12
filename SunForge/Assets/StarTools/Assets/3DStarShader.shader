@@ -2,7 +2,7 @@
 {
 	Properties
 	{
-		_TimeScale("Time Scale", Float) = 0.05
+		_LocalTime("LocalTime", Float) = 0.05
 		_Resolution("Resolution", Float) = 5
 		_StarCenter("Star Center", Vector) = (0, 0, 0, 0)
 		_StarColor("Star Color", Color) = (1, 1, 1, 1)
@@ -33,7 +33,7 @@
 			float4 _StarColor;
 			float4 _StarCenter;
 			float4 _RotRate;
-			float _TimeScale;
+			float _LocalTime;
 			float _Resolution;
 			float _Contrast;
 
@@ -52,14 +52,14 @@
 			{
 				v2f o;
 
-				float s = sin(_RotRate.x * _Time);
-				float c = cos(_RotRate.x * _Time);
+				float s = sin(_RotRate.x);
+				float c = cos(_RotRate.x);
 				float3x3 rotationMatrix_x = float3x3(1, 0, 0, 0, c, -s, 0, s, c);
-				s = sin(_RotRate.y * _Time);
-				c = cos(_RotRate.y * _Time);
+				s = sin(_RotRate.y);
+				c = cos(_RotRate.y);
 				float3x3 rotationMatrix_y = float3x3(c, 0, s, 0, 1, 0, -s, 0, c);
-				s = sin(_RotRate.z * _Time);
-				c = cos(_RotRate.z * _Time);
+				s = sin(_RotRate.z);
+				c = cos(_RotRate.z);
 				float3x3 rotationMatrix_z = float3x3(c, -s, 0, s, c, 0, 0, 0, 1);
 
 				o.vertex = mul((float4x4) unity_ObjectToWorld, v.vertex);
@@ -94,10 +94,9 @@
 				//For B-V, 0 is about pure blue and 1.5 is about pure red
 				//0.5 is whiteish, 1 is yellowish.
 
-				float time_offset = _Time * _TimeScale;
 				float3 pos_offset = i.position_in_world_space / _Resolution;
 
-				float noise_base = (star_base_noise(pos_offset , time_offset, _Contrast));
+				float noise_base = (star_base_noise(pos_offset , _LocalTime, _Contrast));
 
 				float offset = 1 * (noise_base);
 
