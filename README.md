@@ -48,11 +48,9 @@ Because the stars are procedurally generated and shader based, this means that t
 
 The asset has been optimized as well as possible without sacrificing quality. If you intend to have the stars take up a large portion of the screen, other approaches (texture/particle based) may have better performance, but at the cost of reduced graphical fidelity.
 
-## Contact info ##
+## Contact ##
 
-Questions? Comments? Suggestions?
-
-Shoot me a quick email at <jacob.lane.p@gmail.com>. I try to respond to emails within a day when possible.
+Please post any issues or suggestions on the github Wiki pages. Additionally, feel free to contribute to the Wiki or create a pull request if you end up making changes yourself!
 
 ## Update History ##
 
