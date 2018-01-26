@@ -58,7 +58,7 @@ Please post any issues or suggestions on the github Wiki pages. Additionally, fe
 
 Released January 25th, 2018
 
--Project is now open source, and free on the asset store!
+-Project is now open source, and free on the asset store! (Sorry for the poor documentation of the source code and repository, this was originally a quick weekend project with no intention of having other people work on it)
 
 ### 1.0.3 ###
 
