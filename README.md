@@ -4,7 +4,7 @@
 
 [Video Demo](https://www.youtube.com/watch?v=fIn6SE-O1SM)
 
-[Current FAQ](https://gist.github.com/Jacob-Lane/c735897fc8a1760d7d5944a682f2ce86)
+[Current FAQ](https://github.com/Jacob-Lane/StarCreationToolsForUnity/blob/master/README.md)
 
 ## How to use ##
 
@@ -58,7 +58,7 @@ Please post any issues or suggestions on the github Wiki pages. Additionally, fe
 
 Released January 25th, 2018
 
--Project is now free, and the code is up on Github!
+-Project is now open source, and free on the asset store!
 
 ### 1.0.3 ###
 
